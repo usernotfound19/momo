@@ -1,0 +1,201 @@
+import { FlowerItem, BouquetOption, LoveCoupon, MemoryReason } from '../types';
+
+export const AVAILABLE_FLOWERS: FlowerItem[] = [
+  {
+    id: 'red-rose',
+    name: 'Velvet Red Rose',
+    symbolism: 'Deep love, sincere remorse, and everlasting devotion',
+    color: '#be123c',
+    secondaryColor: '#f43f5e',
+    icon: '🌹',
+    priceTag: 'Priceless',
+  },
+  {
+    id: 'pink-tulip',
+    name: 'Soft Pink Tulip',
+    symbolism: 'Affection, gentleness, and a tender new beginning',
+    color: '#f472b6',
+    secondaryColor: '#fbcfe8',
+    icon: '🌷',
+    priceTag: 'From the heart',
+  },
+  {
+    id: 'white-lily',
+    name: 'White Madonna Lily',
+    symbolism: 'Purity of intentions, humility, and peace',
+    color: '#f8fafc',
+    secondaryColor: '#e2e8f0',
+    icon: '🌸',
+    priceTag: 'Pure intent',
+  },
+  {
+    id: 'sunflower',
+    name: 'Warm Sunflower',
+    symbolism: 'Adoration, warmth, and bringing back your sunny smile',
+    color: '#eab308',
+    secondaryColor: '#fef08a',
+    icon: '🌻',
+    priceTag: 'Eternal light',
+  },
+  {
+    id: 'babys-breath',
+    name: "Baby's Breath",
+    symbolism: 'Everlasting tenderness and delicate care',
+    color: '#ffffff',
+    secondaryColor: '#f1f5f9',
+    icon: '🌾',
+    priceTag: 'Gentle soul',
+  },
+  {
+    id: 'lavender',
+    name: 'French Lavender',
+    symbolism: 'Calmness, patience, and emotional healing',
+    color: '#8b5cf6',
+    secondaryColor: '#ddd6fe',
+    icon: '🪻',
+    priceTag: 'Calm mind',
+  },
+  {
+    id: 'blush-peony',
+    name: 'Blush Peony',
+    symbolism: 'Compassion, forgiveness, and quiet beauty',
+    color: '#fb7185',
+    secondaryColor: '#ffe4e6',
+    icon: '🌺',
+    priceTag: 'Deep warmth',
+  },
+];
+
+export const CURATED_BOUQUETS: BouquetOption[] = [
+  {
+    id: 'the-forgiveness-bouquet',
+    title: 'The Sincere Reconciliation',
+    tagline: 'Crafted with genuine remorse and unwavering love',
+    description: 'A rich arrangement of deep velvet roses embraced by delicate baby’s breath and calming lavender. Built to say what words often struggle to express: my temper was foolish, and you are my whole world.',
+    themeColor: '#991b1b',
+    ribbonColor: '#e11d48',
+    wrapperColor: '#fdf2f8',
+    flowers: [
+      { flowerId: 'red-rose', count: 7, name: 'Velvet Red Roses' },
+      { flowerId: 'babys-breath', count: 5, name: "Baby's Breath" },
+      { flowerId: 'lavender', count: 3, name: 'Lavender Sprigs' },
+    ],
+    sentiment: 'I am so deeply sorry for hurting you. Please give us another chance.',
+    imageHint: 'romantic-red-roses',
+  },
+  {
+    id: 'the-sunshine-revival',
+    title: 'Bring Back Your Smile',
+    tagline: 'Warm golden sunflowers and soft chamomile',
+    description: 'Bright, life-affirming sunflowers paired with soft blush peonies and fresh greenery. A reminder that your laughter is what makes all my ordinary days feel magical.',
+    themeColor: '#ca8a04',
+    ribbonColor: '#d97706',
+    wrapperColor: '#fefce8',
+    flowers: [
+      { flowerId: 'sunflower', count: 5, name: 'Golden Sunflowers' },
+      { flowerId: 'blush-peony', count: 4, name: 'Blush Peonies' },
+      { flowerId: 'babys-breath', count: 4, name: "Baby's Breath" },
+    ],
+    sentiment: 'You deserve light, laughter, and endless softness from me.',
+    imageHint: 'golden-sunflowers',
+  },
+  {
+    id: 'the-gentle-grace',
+    title: 'A Gentle New Beginning',
+    tagline: 'Pastel tulips, white lilies & soothing scents',
+    description: 'Elegantly wrapped in blush paper with a satin ribbon. Designed with soft pink tulips and pristine white lilies to ask for peace, a calm restart, and forgiveness.',
+    themeColor: '#db2777',
+    ribbonColor: '#f43f5e',
+    wrapperColor: '#fdf4ff',
+    flowers: [
+      { flowerId: 'pink-tulip', count: 6, name: 'Pink Tulips' },
+      { flowerId: 'white-lily', count: 4, name: 'White Lilies' },
+      { flowerId: 'blush-peony', count: 3, name: 'Blush Peonies' },
+    ],
+    sentiment: 'No more ego, no more rash words. Just patience and you.',
+    imageHint: 'pastel-tulips',
+  },
+];
+
+export const LOVE_COUPONS: LoveCoupon[] = [
+  {
+    id: 'coupon-zero-anger',
+    title: 'The Zero-Anger Lifetime Pass',
+    description: 'Whenever a disagreement arises, I promise to pause, take a deep breath, hold your hand, and speak only with patience and gentle affection.',
+    icon: '🕊️',
+    color: '#f43f5e',
+  },
+  {
+    id: 'coupon-favorite-treat',
+    title: 'Late Night Comfort Food & Ice Cream Run',
+    description: 'Any hour, anywhere. Your favorite dessert, snacks, or drinks delivered with zero hesitation, just to see your face light up.',
+    icon: '🍨',
+    color: '#ec4899',
+  },
+  {
+    id: 'coupon-unlimited-listening',
+    title: 'Attentive Listening & Head Massage',
+    description: 'No unsolicited advice, no distractions, no phone checking. Just me listening to your thoughts and comforting your tiredness.',
+    icon: '💆‍♀️',
+    color: '#8b5cf6',
+  },
+  {
+    id: 'coupon-always-right',
+    title: '“You Were Right All Along” Card',
+    description: 'Redeem this card instantly whenever you need me to surrender gracefully, admit my stubbornness, and give you a warm bear hug.',
+    icon: '👑',
+    color: '#eab308',
+  },
+  {
+    id: 'coupon-sunset-stroll',
+    title: 'A Peaceful, Phone-Free Walk',
+    description: 'Just the two of us holding hands, enjoying the evening breeze, talking about our dreams without a single worry in the world.',
+    icon: '🌅',
+    color: '#06b6d4',
+  },
+  {
+    id: 'coupon-warm-hug',
+    title: 'Unlimited Warm Bear Hugs',
+    description: 'Good for an endless, warm embrace that melts away any sadness or distance until you feel completely safe and cherished.',
+    icon: '🫂',
+    color: '#10b981',
+  },
+];
+
+export const REASONS_LIST: MemoryReason[] = [
+  {
+    id: 'reason-1',
+    title: 'Your Kind & Pure Soul',
+    content: 'In a world that is often rushed and harsh, your kindness is the softest place I know. Hurting the person who cares for me so gently is my deepest regret.',
+    category: 'Gratitude',
+    tag: 'Your Soul',
+  },
+  {
+    id: 'reason-2',
+    title: 'How You Calm My Chaos',
+    content: 'Whenever my mind was overwhelmed, just one sound of your voice could untangle my thoughts. I forgot that in a moment of stupid anger, and I truly regret it.',
+    category: 'Memory',
+    tag: 'Peace',
+  },
+  {
+    id: 'reason-3',
+    title: 'The Way Your Eyes Light Up',
+    content: 'The way you smile with your whole face when you are genuinely happy is my favorite sight in the universe. I promise to protect that smile, never to dim it.',
+    category: 'Love',
+    tag: 'Smile',
+  },
+  {
+    id: 'reason-4',
+    title: 'Our Beautiful Future Together',
+    content: 'We built so many sweet memories and made promises to walk hand in hand. A foolish moment of temper should never end what we hold so dear.',
+    category: 'Future',
+    tag: 'Forever',
+  },
+];
+
+export const INITIAL_PERSONALIZATION = {
+  herName: 'My Love',
+  hisName: 'Kawshik',
+  specialDate: 'Every Day With You',
+  personalCustomNote: 'I know I let my temper control my tongue, and saying those awful words about breaking up was the most reckless mistake I ever made. The truth is, my world is completely empty without you. Please forgive me.',
+};

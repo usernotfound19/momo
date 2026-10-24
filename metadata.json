@@ -1,0 +1,6 @@
+{
+  "name": "I'm Truly Sorry - A Heartfelt Apology & Bouquet For You",
+  "description": "An aesthetic, animated, and heartfelt apology experience featuring custom floral bouquets, sincere promises, memory polaroids, and love coupons.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
