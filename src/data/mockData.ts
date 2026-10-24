@@ -195,7 +195,7 @@ export const REASONS_LIST: MemoryReason[] = [
 
 export const INITIAL_PERSONALIZATION = {
   herName: 'My Love',
-  hisName: 'Kawshik',
+  hisName: 'TANJIL',
   specialDate: 'Every Day With You',
   personalCustomNote: 'I know I let my temper control my tongue, and saying those awful words about breaking up was the most reckless mistake I ever made. The truth is, my world is completely empty without you. Please forgive me.',
 };

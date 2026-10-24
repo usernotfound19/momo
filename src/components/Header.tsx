@@ -1,20 +1,14 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Heart, Settings } from 'lucide-react';
+import { Volume2, VolumeX, Heart } from 'lucide-react';
 import { soundManager } from '../utils/audio';
 import { UserPersonalization } from '../types';
 
 interface HeaderProps {
   personalization: UserPersonalization;
-  isAdmin: boolean;
-  onOpenCustomizer: () => void;
-  onToggleAdmin: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   personalization,
-  isAdmin,
-  onOpenCustomizer,
-  onToggleAdmin,
 }) => {
   const [isMuted, setIsMuted] = useState(soundManager.getIsMuted());
 
@@ -28,11 +22,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Left: Romantic Monogram */}
         <div className="flex items-center gap-2.5">
-          <div
-            onClick={onToggleAdmin}
-            title={isAdmin ? 'Admin Mode active (Click to toggle)' : 'Forever in my heart'}
-            className="w-9 h-9 rounded-full bg-[#FFEAE8] border border-[#F4BBB5] flex items-center justify-center text-[#991b1b] shadow-xs cursor-pointer hover:scale-105 transition-transform"
-          >
+          <div className="w-9 h-9 rounded-full bg-[#FFEAE8] border border-[#F4BBB5] flex items-center justify-center text-[#991b1b] shadow-xs">
             <Heart className="w-4 h-4 fill-[#e11d48] text-[#e11d48]" />
           </div>
           <div>
@@ -47,9 +37,8 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Right Action buttons */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Audio Chime Ambient Player */}
+        {/* Right Action button: Soothing Music Toggle only */}
+        <div className="flex items-center gap-2">
           <button
             onClick={handleToggleSound}
             aria-label="Toggle soothing music"
@@ -71,21 +60,6 @@ export const Header: React.FC<HeaderProps> = ({
               </>
             )}
           </button>
-
-          {/* Edit Details: ONLY visible in Admin Mode for Kawshik */}
-          {isAdmin && (
-            <button
-              onClick={() => {
-                soundManager.playGentleChime(523.25, 0.4);
-                onOpenCustomizer();
-              }}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#991b1b] hover:bg-[#7f1d1d] text-white shadow-sm transition-all cursor-pointer ring-2 ring-rose-300"
-              title="Only you can see this"
-            >
-              <Settings className="w-3.5 h-3.5" />
-              <span>Edit Details</span>
-            </button>
-          )}
         </div>
       </div>
     </header>
