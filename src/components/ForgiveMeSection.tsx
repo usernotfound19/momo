@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Heart, Sparkles, Volume2, VolumeX, RotateCcw } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { UserPersonalization } from '../types';
@@ -13,33 +13,64 @@ export const ForgiveMeSection: React.FC<ForgiveMeSectionProps> = ({
 }) => {
   const [noCount, setNoCount] = useState(0);
   const [noPosition, setNoPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isVanishedUnderYes, setIsVanishedUnderYes] = useState(false);
   const [isForgiven, setIsForgiven] = useState(false);
   const [isPlayingHappyMusic, setIsPlayingHappyMusic] = useState(true);
+
+  const yesButtonRef = useRef<HTMLButtonElement>(null);
+  const noButtonRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const MAX_ATTEMPTS = 5;
 
   const noPhrases = [
     'No 🥺',
     'Are you sure? 🥺',
-    'Really sure? 💔',
     'Look at the puppy eyes! 🐶',
-    'Think of the ice-cream dates! 🍦',
-    'You cannot catch me! 🏃‍♂️💨',
-    'Pretty please with cherries on top? 🍒',
-    'Error 404: "No" not allowed! ❌',
-    'Just tap YES already! ❤️',
+    'Can\'t catch me! 🏃‍♂️💨',
+    'I\'m vanishing under YES! 🙈',
   ];
 
   const dodgeNoButton = () => {
+    const nextCount = noCount + 1;
+    setNoCount(nextCount);
+
+    if (nextCount >= MAX_ATTEMPTS) {
+      // Final move: Glide directly behind/under the YES button and disappear!
+      soundManager.playGentleChime(880, 0.25);
+
+      if (yesButtonRef.current && noButtonRef.current) {
+        const yesRect = yesButtonRef.current.getBoundingClientRect();
+        const noRect = noButtonRef.current.getBoundingClientRect();
+        // Calculate offset so NO button glides directly to the center of YES button
+        const deltaX = yesRect.left + yesRect.width / 2 - (noRect.left + noRect.width / 2);
+        const deltaY = yesRect.top + yesRect.height / 2 - (noRect.top + noRect.height / 2);
+
+        setNoPosition((prev) => ({
+          x: prev.x + deltaX,
+          y: prev.y + deltaY,
+        }));
+      } else {
+        // Fallback relative offset to shift left onto the YES button
+        setNoPosition({ x: -140, y: 0 });
+      }
+
+      // Mark as fully vanished under yes after swift slide
+      setTimeout(() => {
+        setIsVanishedUnderYes(true);
+      }, 220);
+      return;
+    }
+
+    // Earlier moves: dart in random directions
     soundManager.playGentleChime(784, 0.15);
-    setNoCount((prev) => prev + 1);
 
-    // Fast unpredictable displacement bounds for mobile and desktop
     const isMobile = window.innerWidth < 640;
-    const maxOffset = isMobile ? 120 : 220;
+    const maxOffset = isMobile ? 110 : 200;
 
-    // Generate non-zero random coordinates
+    // Unpredictable rapid displacement
     const randomAngle = Math.random() * Math.PI * 2;
-    const randomDistance = Math.random() * (maxOffset - 50) + 50;
+    const randomDistance = Math.random() * (maxOffset - 40) + 40;
 
     const newX = Math.cos(randomAngle) * randomDistance;
     const newY = Math.sin(randomAngle) * (randomDistance * 0.7);
@@ -90,12 +121,16 @@ export const ForgiveMeSection: React.FC<ForgiveMeSectionProps> = ({
     setIsForgiven(false);
     setNoCount(0);
     setNoPosition({ x: 0, y: 0 });
+    setIsVanishedUnderYes(false);
     soundManager.stopHappySong();
   };
 
-  // Dynamic scales
-  const noScale = Math.max(0.35, 1 - noCount * 0.1);
-  const yesScale = Math.min(1.8, 1 + noCount * 0.12);
+  // Dynamic scales: No shrinks, Yes grows larger
+  const noScale = isVanishedUnderYes
+    ? 0
+    : Math.max(0.2, 1 - noCount * 0.18);
+
+  const yesScale = Math.min(1.85, 1 + noCount * 0.14);
 
   return (
     <section id="decision" className="py-16 sm:py-24 md:py-32 px-4 bg-gradient-to-b from-[#FFFDF9] via-[#FFF1F2]/60 to-[#FFFDF9] overflow-hidden">
@@ -121,46 +156,62 @@ export const ForgiveMeSection: React.FC<ForgiveMeSectionProps> = ({
             </p>
 
             {/* Playful Interactive Decision Buttons Area */}
-            <div className="relative pt-8 pb-12 flex items-center justify-center gap-6 min-h-[160px]">
-              {/* YES Button - Grows as she avoids it! */}
+            <div className="relative pt-8 pb-12 flex items-center justify-center gap-6 min-h-[180px]">
+              {/* YES Button - Positioned in center, on top of any vanished button */}
               <button
+                ref={yesButtonRef}
                 onClick={handleYesClick}
                 style={{
                   transform: `scale(${yesScale})`,
                   transition: 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                  zIndex: 20,
+                  zIndex: 30,
                 }}
-                className="px-8 py-4 rounded-full bg-gradient-to-r from-[#be123c] to-[#9f1239] hover:from-[#9f1239] hover:to-[#881337] text-white font-bold text-base sm:text-lg shadow-2xl shadow-rose-900/30 active:scale-95 cursor-pointer flex items-center gap-2"
+                className={`px-8 py-4 rounded-full bg-gradient-to-r from-[#be123c] to-[#9f1239] hover:from-[#9f1239] hover:to-[#881337] text-white font-bold text-base sm:text-lg shadow-2xl shadow-rose-900/30 active:scale-95 cursor-pointer flex items-center gap-2 select-none ${
+                  isVanishedUnderYes ? 'ring-4 ring-rose-400 ring-offset-2 animate-pulse' : ''
+                }`}
               >
                 <Heart className="w-5 h-5 fill-white animate-pulse" />
                 <span>Yes! ❤️</span>
               </button>
 
-              {/* NO Button - Dodges, speeds away and shrinks! */}
-              <button
-                onMouseEnter={dodgeNoButton}
-                onTouchStart={(e) => {
-                  e.preventDefault();
-                  dodgeNoButton();
-                }}
-                onClick={dodgeNoButton}
-                style={{
-                  transform: `translate(${noPosition.x}px, ${noPosition.y}px) scale(${noScale})`,
-                  transition: 'transform 0.12s ease-out',
-                  zIndex: 10,
-                  pointerEvents: noCount >= 10 ? 'none' : 'auto',
-                }}
-                className="px-5 py-3 rounded-full bg-white hover:bg-stone-100 text-stone-600 border border-stone-300 font-medium text-xs sm:text-sm shadow-md cursor-pointer select-none whitespace-nowrap"
-              >
-                <span>{noPhrases[Math.min(noCount, noPhrases.length - 1)]}</span>
-              </button>
+              {/* NO Button - Moves around and eventually vanishes under YES! */}
+              {!isVanishedUnderYes && (
+                <button
+                  ref={noButtonRef}
+                  onMouseEnter={dodgeNoButton}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    dodgeNoButton();
+                  }}
+                  onClick={dodgeNoButton}
+                  style={{
+                    transform: `translate(${noPosition.x}px, ${noPosition.y}px) scale(${noScale})`,
+                    transition: 'transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.2s',
+                    zIndex: 10,
+                    opacity: noCount >= MAX_ATTEMPTS ? 0 : 1,
+                  }}
+                  className="px-5 py-3 rounded-full bg-white hover:bg-stone-100 text-stone-600 border border-stone-300 font-medium text-xs sm:text-sm shadow-md cursor-pointer select-none whitespace-nowrap"
+                >
+                  <span>{noPhrases[Math.min(noCount, noPhrases.length - 1)]}</span>
+                </button>
+              )}
             </div>
 
-            {noCount > 2 && (
+            {/* Cute feedback messages as button dodges and vanishes */}
+            {isVanishedUnderYes ? (
+              <div className="space-y-1 animate-in fade-in zoom-in duration-300">
+                <p className="text-sm font-semibold text-[#be123c]">
+                  🙈 The "No" button surrendered and vanished under "Yes!"
+                </p>
+                <p className="text-xs text-[#735c59]">
+                  It seems the universe only wants you to tap YES! 🥰
+                </p>
+              </div>
+            ) : noCount > 0 ? (
               <p className="text-xs text-[#be123c] font-medium animate-pulse">
-                (The "No" button seems to be running away! Maybe it's a sign? 😉)
+                (The "No" button is trying to run away from you! 😉)
               </p>
-            )}
+            ) : null}
           </div>
         ) : (
           /* Forgiven State: The Famous Happy Happy Happy Cat Celebration */
@@ -179,7 +230,6 @@ export const ForgiveMeSection: React.FC<ForgiveMeSectionProps> = ({
                 alt="Happy Happy Happy Cat Jumping"
                 className="w-full h-full object-cover select-none"
                 onError={(e) => {
-                  // Fallback GIF if tenor is blocked
                   (e.currentTarget as HTMLImageElement).src =
                     'https://media.giphy.com/media/GeimqsH0TLDt4tScGw/giphy.gif';
                 }}

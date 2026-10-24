@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Heart, Settings, ShieldCheck, Lock } from 'lucide-react';
+import { Volume2, VolumeX, Heart, Settings } from 'lucide-react';
 import { soundManager } from '../utils/audio';
 import { UserPersonalization } from '../types';
 
@@ -7,7 +7,6 @@ interface HeaderProps {
   personalization: UserPersonalization;
   isAdmin: boolean;
   onOpenCustomizer: () => void;
-  onScrollToDecision: () => void;
   onToggleAdmin: () => void;
 }
 
@@ -15,7 +14,6 @@ export const Header: React.FC<HeaderProps> = ({
   personalization,
   isAdmin,
   onOpenCustomizer,
-  onScrollToDecision,
   onToggleAdmin,
 }) => {
   const [isMuted, setIsMuted] = useState(soundManager.getIsMuted());
@@ -32,7 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center gap-2.5">
           <div
             onClick={onToggleAdmin}
-            title={isAdmin ? 'Admin Mode active (Click to toggle)' : 'For you with love'}
+            title={isAdmin ? 'Admin Mode active (Click to toggle)' : 'Forever in my heart'}
             className="w-9 h-9 rounded-full bg-[#FFEAE8] border border-[#F4BBB5] flex items-center justify-center text-[#991b1b] shadow-xs cursor-pointer hover:scale-105 transition-transform"
           >
             <Heart className="w-4 h-4 fill-[#e11d48] text-[#e11d48]" />
@@ -54,8 +52,8 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Audio Chime Ambient Player */}
           <button
             onClick={handleToggleSound}
-            aria-label="Toggle soothing ambient music"
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
+            aria-label="Toggle soothing music"
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
               !isMuted
                 ? 'bg-[#FFE4E6] text-[#be123c] border border-[#FDA4AF] shadow-xs'
                 : 'bg-stone-100 text-stone-600 hover:bg-stone-200 border border-stone-200'
@@ -64,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
             {!isMuted ? (
               <>
                 <Volume2 className="w-3.5 h-3.5 text-[#be123c] animate-pulse" />
-                <span className="text-xs">Music: On</span>
+                <span className="text-xs font-semibold">Music: On 🎵</span>
               </>
             ) : (
               <>
@@ -74,16 +72,7 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* Quick jump to question */}
-          <button
-            onClick={onScrollToDecision}
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#FFF0F3] hover:bg-[#FFE2E8] text-[#be123c] border border-[#FECDD3] cursor-pointer transition-all shadow-xs"
-          >
-            <Heart className="w-3.5 h-3.5 fill-[#be123c]" />
-            <span>Forgive Me?</span>
-          </button>
-
-          {/* Edit Details: ONLY visible in Admin Mode for Kawshik! Girlfriend will NEVER see this */}
+          {/* Edit Details: ONLY visible in Admin Mode for Kawshik */}
           {isAdmin && (
             <button
               onClick={() => {

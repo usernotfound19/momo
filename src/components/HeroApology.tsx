@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Sparkles, ArrowDown, Mail } from 'lucide-react';
+import { Sparkles, ArrowDown } from 'lucide-react';
 import { UserPersonalization } from '../types';
 import { soundManager } from '../utils/audio';
 
@@ -7,14 +7,12 @@ interface HeroApologyProps {
   personalization: UserPersonalization;
   onScrollToBouquet: () => void;
   onScrollToLetter: () => void;
-  onScrollToDecision: () => void;
 }
 
 export const HeroApology: React.FC<HeroApologyProps> = ({
   personalization,
   onScrollToBouquet,
   onScrollToLetter,
-  onScrollToDecision,
 }) => {
   return (
     <section className="relative pt-10 pb-16 sm:py-20 md:py-24 px-4 overflow-hidden">
@@ -44,8 +42,8 @@ export const HeroApology: React.FC<HeroApologyProps> = ({
         {/* Note Card */}
         <div className="relative max-w-xl mx-auto mb-8 p-5 sm:p-7 rounded-3xl glass-card shadow-xl shadow-rose-900/5 text-left border border-[#F3D5D2]">
           <div className="flex items-start gap-3.5 sm:gap-4">
-            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#FFEAE8] border border-[#F5B5AF] flex-shrink-0 flex items-center justify-center text-[#991b1b] shadow-inner">
-              <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-[#be123c]" />
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#FFEAE8] border border-[#F5B5AF] flex-shrink-0 flex items-center justify-center text-[#991b1b] shadow-inner text-xl">
+              💌
             </div>
             <div className="space-y-1.5 flex-1 min-w-0">
               <span className="text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-[#be123c] block">
@@ -64,14 +62,14 @@ export const HeroApology: React.FC<HeroApologyProps> = ({
           </div>
         </div>
 
-        {/* Action Button Navigation Group */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-3.5">
+        {/* Action Buttons: Only the two reading steps! */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
           <button
             onClick={() => {
               soundManager.playGentleChime(587.33);
               onScrollToBouquet();
             }}
-            className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-gradient-to-r from-[#be123c] to-[#9f1239] hover:from-[#9f1239] hover:to-[#881337] text-white font-medium text-sm sm:text-base shadow-lg shadow-rose-900/20 hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-gradient-to-r from-[#be123c] to-[#9f1239] hover:from-[#9f1239] hover:to-[#881337] text-white font-medium text-sm sm:text-base shadow-lg shadow-rose-900/20 hover:shadow-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>💐</span>
             <span>See Your Bouquets</span>
@@ -83,21 +81,10 @@ export const HeroApology: React.FC<HeroApologyProps> = ({
               soundManager.playGentleChime(523.25);
               onScrollToLetter();
             }}
-            className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-white hover:bg-[#FFF5F5] text-[#422d2b] border border-[#E9CFCB] font-medium text-sm sm:text-base shadow-xs hover:border-[#D9A6A0] transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-white hover:bg-[#FFF5F5] text-[#422d2b] border border-[#E9CFCB] font-medium text-sm sm:text-base shadow-xs hover:border-[#D9A6A0] transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>💌</span>
             <span>Read Apology Letter</span>
-          </button>
-
-          <button
-            onClick={() => {
-              soundManager.playGentleChime(659.25);
-              onScrollToDecision();
-            }}
-            className="w-full sm:w-auto px-5 py-3.5 rounded-full bg-[#FFF0F3] hover:bg-[#FFE2E8] text-[#be123c] border border-[#FECDD3] font-medium text-sm sm:text-base transition-all flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <Heart className="w-4 h-4 fill-[#be123c]" />
-            <span>Do You Forgive Me?</span>
           </button>
         </div>
       </div>

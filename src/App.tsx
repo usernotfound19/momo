@@ -15,7 +15,7 @@ import { ForgiveMeSection } from './components/ForgiveMeSection';
 import { CustomizerModal } from './components/CustomizerModal';
 import { INITIAL_PERSONALIZATION } from './data/mockData';
 import { UserPersonalization } from './types';
-import { Heart, Share2, Check, Lock, ShieldCheck, Eye, Settings } from 'lucide-react';
+import { Heart, Share2, Check, Lock, ShieldCheck, Eye, Settings, Smartphone, Monitor } from 'lucide-react';
 import { soundManager } from './utils/audio';
 
 export default function App() {
@@ -44,6 +44,9 @@ export default function App() {
     return false;
   });
 
+  // Phone Simulator Frame Toggle (Allows Kawshik to preview mobile view directly on computer)
+  const [isPhoneFrame, setIsPhoneFrame] = useState(false);
+
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -63,6 +66,23 @@ export default function App() {
     }
   }, [isAdmin]);
 
+  // Audio start listener on first interaction (ensures browser audio unlocks)
+  useEffect(() => {
+    const handleFirstGesture = () => {
+      soundManager.startAmbientChimes();
+      window.removeEventListener('click', handleFirstGesture);
+      window.removeEventListener('touchstart', handleFirstGesture);
+    };
+
+    window.addEventListener('click', handleFirstGesture);
+    window.addEventListener('touchstart', handleFirstGesture);
+
+    return () => {
+      window.removeEventListener('click', handleFirstGesture);
+      window.removeEventListener('touchstart', handleFirstGesture);
+    };
+  }, []);
+
   const handleScrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (el) {
@@ -72,7 +92,6 @@ export default function App() {
 
   const handleShareLink = () => {
     soundManager.playGentleChime(523.25, 0.3);
-    // Strip admin params so girlfriend always gets the pure, clean view!
     const cleanUrl = window.location.origin + window.location.pathname;
 
     if (navigator.share) {
@@ -95,79 +114,51 @@ export default function App() {
     soundManager.playGentleChime(587.33, 0.3);
   };
 
-  return (
-    <div className="min-h-screen bg-[#FFFDF9] text-[#2D2424] relative selection:bg-[#FFE4E6] selection:text-[#991b1b]">
+  // The core content of the application
+  const mainContent = (
+    <div className="w-full relative min-h-screen">
       {/* Falling romantic petals canvas background */}
       <FallingPetals active={true} />
-
-      {/* Admin Floating Control Pill (ONLY visible when Kawshik is logged in as Admin) */}
-      {isAdmin && (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-[#1c1917]/90 text-white backdrop-blur-md px-4 py-2 rounded-full shadow-2xl border border-stone-700 flex items-center gap-3 text-xs">
-          <span className="flex items-center gap-1.5 text-amber-400 font-semibold">
-            <ShieldCheck className="w-4 h-4 text-amber-400" />
-            <span>Admin Active</span>
-          </span>
-          <span className="text-stone-400 hidden sm:inline">|</span>
-          <span className="text-stone-300 hidden sm:inline">Girlfriend won't see edit tools</span>
-          <button
-            onClick={() => setIsCustomizerOpen(true)}
-            className="px-2.5 py-1 rounded-full bg-[#be123c] hover:bg-[#9f1239] text-white font-medium cursor-pointer flex items-center gap-1"
-          >
-            <Settings className="w-3 h-3" />
-            <span>Edit Details</span>
-          </button>
-          <button
-            onClick={() => setIsAdmin(false)}
-            className="px-2.5 py-1 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-200 cursor-pointer flex items-center gap-1"
-            title="Preview what she sees"
-          >
-            <Eye className="w-3 h-3" />
-            <span>Girlfriend View</span>
-          </button>
-        </div>
-      )}
 
       {/* Navigation Header */}
       <Header
         personalization={personalization}
         isAdmin={isAdmin}
         onOpenCustomizer={() => setIsCustomizerOpen(true)}
-        onScrollToDecision={() => handleScrollTo('decision')}
         onToggleAdmin={toggleAdmin}
       />
 
       <main>
-        {/* Hero with heartfelt apology & wax seal */}
+        {/* 1. Hero with heartfelt apology & wax seal note */}
         <HeroApology
           personalization={personalization}
           onScrollToBouquet={() => handleScrollTo('bouquets')}
           onScrollToLetter={() => handleScrollTo('letter')}
-          onScrollToDecision={() => handleScrollTo('decision')}
         />
 
-        {/* Curated & Custom Bouquet Showcase */}
+        {/* 2. Curated & Custom Bouquet Showcase */}
         <BouquetShowcase
           personalization={personalization}
           onBouquetChosen={() => {}}
         />
 
-        {/* Sincere Unsealed Apology Letter */}
+        {/* 3. Sincere Unsealed Apology Letter */}
         <ApologyLetter
           personalization={personalization}
         />
 
-        {/* Memories & Reasons Why She is Irreplaceable */}
+        {/* 4. Memories & Reasons Why She is Irreplaceable */}
         <ReasonsAndMemories
           personalization={personalization}
           isAdmin={isAdmin}
         />
 
-        {/* Love & Apology Coupons */}
+        {/* 5. Love & Apology Coupons */}
         <LoveCoupons
           personalization={personalization}
         />
 
-        {/* The Playful & Sincere Decision: "Do you forgive me now?" with dodging No and Happy Cat */}
+        {/* 6. The Grand Finale: "Do you forgive me now?" with dodging No and Happy Happy Happy Cat */}
         <ForgiveMeSection
           personalization={personalization}
         />
@@ -233,6 +224,101 @@ export default function App() {
           </p>
         </div>
       </footer>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#FFFDF9] text-[#2D2424] relative selection:bg-[#FFE4E6] selection:text-[#991b1b]">
+      {/* Admin Floating Control Pill (ONLY visible when Kawshik is in Admin Mode) */}
+      {isAdmin && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-[#1c1917]/90 text-white backdrop-blur-md px-4 py-2 rounded-full shadow-2xl border border-stone-700 flex items-center gap-2.5 sm:gap-3 text-xs">
+          <span className="flex items-center gap-1.5 text-amber-400 font-semibold">
+            <ShieldCheck className="w-4 h-4 text-amber-400" />
+            <span className="hidden sm:inline">Admin</span>
+          </span>
+
+          {/* Phone View Simulator Button */}
+          <button
+            onClick={() => {
+              setIsPhoneFrame(!isPhoneFrame);
+              soundManager.playGentleChime(523.25, 0.2);
+            }}
+            className={`px-3 py-1 rounded-full font-medium cursor-pointer flex items-center gap-1.5 transition-all ${
+              isPhoneFrame
+                ? 'bg-rose-600 text-white shadow-xs'
+                : 'bg-stone-800 hover:bg-stone-700 text-stone-300'
+            }`}
+            title="Toggle Smartphone Frame Preview"
+          >
+            {isPhoneFrame ? (
+              <>
+                <Monitor className="w-3.5 h-3.5" />
+                <span>Full View</span>
+              </>
+            ) : (
+              <>
+                <Smartphone className="w-3.5 h-3.5" />
+                <span>Phone Preview</span>
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={() => setIsCustomizerOpen(true)}
+            className="px-2.5 py-1 rounded-full bg-[#be123c] hover:bg-[#9f1239] text-white font-medium cursor-pointer flex items-center gap-1"
+          >
+            <Settings className="w-3 h-3" />
+            <span>Edit</span>
+          </button>
+
+          <button
+            onClick={() => setIsAdmin(false)}
+            className="px-2.5 py-1 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-200 cursor-pointer flex items-center gap-1"
+            title="Preview what she sees"
+          >
+            <Eye className="w-3 h-3" />
+            <span className="hidden sm:inline">Girlfriend View</span>
+          </button>
+        </div>
+      )}
+
+      {/* Render either directly or inside Phone Simulator Frame */}
+      {isPhoneFrame ? (
+        <div className="min-h-screen bg-stone-900 py-6 sm:py-10 flex flex-col items-center justify-center px-2">
+          {/* Top helper title */}
+          <div className="mb-4 text-center text-white">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-800 text-xs text-rose-300 border border-stone-700">
+              <Smartphone className="w-3.5 h-3.5" />
+              <span>Mobile Phone Screen Simulator (iPhone / Galaxy)</span>
+            </div>
+            <p className="text-[11px] text-stone-400 mt-1">
+              Scroll inside the phone frame below to test the exact touch view your girlfriend will experience!
+            </p>
+          </div>
+
+          {/* Realistic Phone Mockup Chassis */}
+          <div className="w-[390px] max-w-[96vw] h-[820px] max-h-[88vh] bg-[#FFFDF9] rounded-[48px] border-[10px] border-stone-800 shadow-2xl overflow-hidden relative flex flex-col ring-1 ring-white/10">
+            {/* Phone Dynamic Island / Camera Notch */}
+            <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-28 h-5 bg-black rounded-full z-50 flex items-center justify-center">
+              <div className="w-2.5 h-2.5 rounded-full bg-stone-800/80 mr-2" />
+              <div className="w-2 h-2 rounded-full bg-stone-900" />
+            </div>
+
+            {/* Scrollable phone screen area */}
+            <div className="w-full flex-1 overflow-y-auto overflow-x-hidden pt-4">
+              {mainContent}
+            </div>
+
+            {/* Bottom Home Indicator Bar */}
+            <div className="w-full h-4 bg-transparent flex items-center justify-center pointer-events-none pb-1">
+              <div className="w-32 h-1 bg-stone-300 rounded-full" />
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* Full Standard View (automatically scales to native mobile screens or desktops) */
+        mainContent
+      )}
 
       {/* Edit Names & Details Modal (Kawshik only) */}
       <CustomizerModal
